@@ -1,0 +1,23 @@
+{
+  "name": "kvstore",
+  "version": "1.0.0",
+  "description": "Simple Node.js KV store with SQLite persistence and in-memory cache",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "@paypal/checkout-server-sdk": "^1.0.3",
+    "bcryptjs": "^3.0.3",
+    "better-sqlite3": "^12.5.0",
+    "express": "^5.2.1",
+    "lru-cache": "^11.2.4",
+    "stripe": "^20.0.0"
+  }
+}
