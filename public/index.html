@@ -70,6 +70,35 @@
       <div id="paymentInfo"></div>
     </section>
 
+    <section id="usecases">
+      <h2>Use cases</h2>
+      <div class="usecase">
+        <h3>Pipe a command to your personal site</h3>
+        <p>Capture live CLI output and surface it on a page with one fetch.</p>
+        <pre><code>uptime | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/site-status -H "Content-Type: text/plain" --data-binary @-</code></pre>
+        <pre><code class="language-js">const res = await fetch('/api/kv/&lt;user&gt;/site-status');</code>
+<code class="language-js">document.getElementById('status').textContent = await res.text();</code></pre>
+      </div>
+
+      <div class="usecase">
+        <h3>Share deploy metadata with your frontend</h3>
+        <p>Drop build info from CI so the client can render version badges.</p>
+        <pre><code>echo '{"release":"'"$GITHUB_SHA"'","env":"prod"}' \</code>
+<code>  | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/deploy -H "Content-Type: application/json" --data-binary @-</code></pre>
+        <pre><code class="language-js">const meta = await fetch('/api/kv/&lt;user&gt;/deploy').then(r =&gt; r.json());</code>
+<code class="language-js">document.querySelector('#build').textContent = meta.release;</code></pre>
+      </div>
+
+      <div class="usecase">
+        <h3>Coordinate scripts across machines</h3>
+        <p>Use KV as a tiny mailbox for automation steps.</p>
+        <pre><code># box A writes the next action</code>
+<code>echo "restart-api" | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/ops-task --data-binary @-</code>
+<code># box B polls and reacts</code>
+<code>curl https://your-kv-host/api/kv/&lt;user&gt;/ops-task | xargs -I{} bash -lc '{}'</code></pre>
+      </div>
+    </section>
+
     <section id="infoSection">
       <h2>Info</h2>
       <p>
