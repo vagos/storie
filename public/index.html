@@ -5,37 +5,57 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>KV Store</title>
   <script src="https://js.stripe.com/v3/"></script>
+  <link rel="stylesheet" href="/assets/style.css">
 </head>
 <body>
   <div class="card">
-    <h1>KV Store</h1>
-    <p>Simple key-value store. Free accounts can use one key; premium unlocks unlimited keys. Log in to manage your data.</p>
 
-    <section id="loginSection">
-      <h2>Create or log in</h2>
-      <label for="userId">User ID</label>
-      <input id="userId" type="text" placeholder="alice123" />
-      <label for="password">Password</label>
-      <input id="password" type="password" placeholder="••••" />
-      <div>All accounts start as <strong>free</strong>. Upgrade to premium after logging in.</div>
-      <button id="createUserBtn">Create or Login</button>
-      <div id="loginStatus">Not logged in.</div>
-    </section>
-
-    <section id="dashboard" style="display: none;">
-      <div>
-        <strong id="currentUser">Current user: none</strong>
-        <button id="logoutBtn">Log out</button>
+    <header class="hero">
+      <div class="hero-left">
+        <h1>KV Store</h1>
+        <p>
+          Simple key-value store. Free accounts can use one key; premium unlocks unlimited keys.
+          Log in to manage your data.
+        </p>
+        <p id="loginStatus">Not logged in.</p>
       </div>
 
+      <div class="hero-right">
+        <!-- Logged OUT state (default visible) -->
+        <div class="auth-box" id="authBoxLoggedOut">
+          <div class="auth-title"></div>
+          <a class="auth-btn primary" href="/login.html">Log in or create account</a>
+        </div>
+
+        <!-- Logged IN state (default hidden; JS will show it) -->
+        <div class="auth-box" id="authBoxLoggedIn" style="display:none;">
+          <div class="auth-title">Current user</div>
+
+          <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;">
+            <div id="heroUserPill" style="font-weight:700; color:#444;"></div>
+            <button id="heroLogoutBtn" class="secondary" type="button">Log out</button>
+          </div>
+        </div>
+      </div>
+
+    </header>
+
+    <div id="appBanner" class="banner" style="display:none;"></div>
+
+    <section id="dashboard" style="display: none;">
+
       <h2>KV operations</h2>
+
       <label for="key">Key</label>
       <input id="key" type="text" placeholder="example-key" />
 
       <label for="value">Value (text or JSON)</label>
       <textarea id="value" placeholder='{ "message": "hello" }'></textarea>
 
-      <label><input type="checkbox" id="requireSecret"> Protect this key (secret generated automatically)</label>
+      <label>
+        <input type="checkbox" id="requireSecret">
+        Protect this key (secret generated automatically)
+      </label>
 
       <div class="actions">
         <button id="setBtn">Set Value</button>
@@ -47,6 +67,7 @@
 
       <h2>Your keys</h2>
       <div id="tableStatus">No data loaded.</div>
+
       <table border="1" width="100%" cellpadding="6">
         <thead>
           <tr>
@@ -55,9 +76,9 @@
             <th>Updated</th>
           </tr>
         </thead>
-        <tbody id="entriesBody">
-        </tbody>
+        <tbody id="entriesBody"></tbody>
       </table>
+
       <div class="actions">
         <button class="secondary" id="prevPageBtn">Prev</button>
         <span id="pageInfo"></span>
@@ -71,31 +92,56 @@
     </section>
 
     <section id="usecases">
-      <h2>Use cases</h2>
-      <div class="usecase">
-        <h3>Pipe a command to your personal site</h3>
-        <p>Capture live CLI output and surface it on a page with one fetch.</p>
-        <pre><code>uptime | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/site-status -H "Content-Type: text/plain" --data-binary @-</code></pre>
-        <pre><code class="language-js">const res = await fetch('/api/kv/&lt;user&gt;/site-status');</code>
-<code class="language-js">document.getElementById('status').textContent = await res.text();</code></pre>
-      </div>
+      <h2>Example use cases</h2>
+      <p class="muted">
+        Practical examples showing how KV Store can be used in real systems.
+      </p>
 
-      <div class="usecase">
-        <h3>Share deploy metadata with your frontend</h3>
-        <p>Drop build info from CI so the client can render version badges.</p>
-        <pre><code>echo '{"release":"'"$GITHUB_SHA"'","env":"prod"}' \</code>
-<code>  | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/deploy -H "Content-Type: application/json" --data-binary @-</code></pre>
-        <pre><code class="language-js">const meta = await fetch('/api/kv/&lt;user&gt;/deploy').then(r =&gt; r.json());</code>
-<code class="language-js">document.querySelector('#build').textContent = meta.release;</code></pre>
-      </div>
+      <div class="usecase-grid">
 
-      <div class="usecase">
-        <h3>Coordinate scripts across machines</h3>
-        <p>Use KV as a tiny mailbox for automation steps.</p>
-        <pre><code># box A writes the next action</code>
-<code>echo "restart-api" | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/ops-task --data-binary @-</code>
-<code># box B polls and reacts</code>
-<code>curl https://your-kv-host/api/kv/&lt;user&gt;/ops-task | xargs -I{} bash -lc '{}'</code></pre>
+        <div class="usecase">
+          <h3>Pipe command output to a website</h3>
+          <p>
+            Capture live CLI output and expose it on a page with a single fetch.
+          </p>
+          <pre><code>uptime | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/site-status \
+      -H "Content-Type: text/plain" --data-binary @-</code></pre>
+          <pre><code class="language-js">const res = await fetch('/api/kv/&lt;user&gt;/site-status');
+    document.getElementById('status').textContent = await res.text();</code></pre>
+        </div>
+
+        <div class="usecase">
+          <h3>Share deployment metadata with your frontend</h3>
+          <p>
+            Push build information from CI so clients can render version or status badges.
+          </p>
+          <pre><code>echo '{"release":"'"$GITHUB_SHA"'","env":"prod"}' \
+      | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/deploy \
+        -H "Content-Type: application/json" --data-binary @-</code></pre>
+          <pre><code class="language-js">const meta = await fetch('/api/kv/&lt;user&gt;/deploy').then(r =&gt; r.json());
+    document.querySelector('#build').textContent = meta.release;</code></pre>
+        </div>
+
+        <div class="usecase">
+          <h3>Coordinate scripts across machines</h3>
+          <p>
+            Use KV Store as a lightweight mailbox for automation and orchestration.
+          </p>
+          <pre><code># machine A publishes the next action
+    echo "restart-api" | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/ops-task --data-binary @-
+
+    # machine B polls and executes
+    curl https://your-kv-host/api/kv/&lt;user&gt;/ops-task | xargs -I{} bash -lc '{}'</code></pre>
+        </div>
+
+        <div class="usecase">
+          <h3>Feature flags and runtime configuration</h3>
+          <p>
+            Store small runtime switches that multiple services can read consistently.
+          </p>
+          <pre><code>echo "on" | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/feature-x</code></pre>
+        </div>
+
       </div>
     </section>
 
@@ -106,10 +152,13 @@
         Support: <a href="mailto:vagos@lamprou.xyz">vagos@lamprou.xyz</a>
       </p>
       <p>
-      Made by Evangelos Lamprou and Ioanna Gemou.
+        Made by
+        <a href="https://vagos.lamprou.xyz" target="_blank" rel="noreferrer">Evangelos Lamprou</a>
+        and
+        <a href="https://igemou.github.io/" target="_blank" rel="noreferrer">Ioanna Gemou</a>.
       </p>
-
     </section>
+
   </div>
 
   <script src="index.js" defer></script>
