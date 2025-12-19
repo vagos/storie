@@ -85,8 +85,8 @@ app.post('/api/users', (req, res) => {
   if (typeof id !== 'string' || id.trim() === '') {
     return res.status(400).json({ error: 'User id must be a non-empty string' });
   }
-  if (typeof password !== 'string' || password.length < 4) {
-    return res.status(400).json({ error: 'Password must be at least 4 characters' });
+  if (typeof password !== 'string') {
+    return res.status(400).json({ error: 'Invalid password.' });
   }
 
   const hashed = bcrypt.hashSync(password, 10);
@@ -261,7 +261,7 @@ app.get('/api/kv/:userId/:key', (req, res) => {
   }
 
   if (user.tier === 'free' && user.free_key && user.free_key !== key) {
-    return res.status(403).json({ error: `Free tier can only access key \"${user.free_key}\"` });
+    return res.status(403).json({ error: `Free tier can only access key "${user.free_key}"` });
   }
 
   const row = readEntryStmt.get(userId, key);

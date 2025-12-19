@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KV Store</title>
+  <title>storie</title>
   <script src="https://js.stripe.com/v3/"></script>
   <link rel="stylesheet" href="/assets/style.css">
 </head>
@@ -12,12 +12,10 @@
 
     <header class="hero">
       <div class="hero-left">
-        <h1>KV Store</h1>
+        <h1 class="title">storie</h1>
         <p>
-          Simple key-value store. Free accounts can use one key; premium unlocks unlimited keys.
-          Log in to manage your data.
+          Simple, API-accessible key-value store.
         </p>
-        <p id="loginStatus">Not logged in.</p>
       </div>
 
       <div class="hero-right">
@@ -29,8 +27,6 @@
 
         <!-- Logged IN state (default hidden; JS will show it) -->
         <div class="auth-box" id="authBoxLoggedIn" style="display:none;">
-          <div class="auth-title">Current user</div>
-
           <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; flex-wrap:wrap;">
             <div id="heroUserPill" style="font-weight:700; color:#444;"></div>
             <button id="heroLogoutBtn" class="secondary" type="button">Log out</button>
@@ -44,17 +40,17 @@
 
     <section id="dashboard" style="display: none;">
 
-      <h2>KV operations</h2>
+      <h2>Operations</h2>
 
       <label for="key">Key</label>
-      <input id="key" type="text" placeholder="example-key" />
+      <input id="key" type="text" placeholder="my-key" />
 
       <label for="value">Value (text or JSON)</label>
       <textarea id="value" placeholder='{ "message": "hello" }'></textarea>
 
       <label>
         <input type="checkbox" id="requireSecret">
-        Protect this key (secret generated automatically)
+        Protect this key (need secret to get value)
       </label>
 
       <div class="actions">
@@ -68,7 +64,7 @@
       <h2>Your keys</h2>
       <div id="tableStatus">No data loaded.</div>
 
-      <table border="1" width="100%" cellpadding="6">
+      <table id="tableKeys" border="1" width="100%" cellpadding="6">
         <thead>
           <tr>
             <th>Key</th>
@@ -80,21 +76,21 @@
       </table>
 
       <div class="actions">
-        <button class="secondary" id="prevPageBtn">Prev</button>
+        <button class="simple" id="prevPageBtn">prev</button>
         <span id="pageInfo"></span>
-        <button class="secondary" id="nextPageBtn">Next</button>
+        <button class="simple" id="nextPageBtn">next</button>
       </div>
-
+  
       <h2>Upgrade to premium</h2>
-      <p>Start a Stripe checkout and confirm to unlock unlimited keys. Requires server STRIPE_SECRET_KEY.</p>
-      <button id="startCheckoutBtn">Start Stripe checkout</button>
+      <p>Premium unlocks infinite key storage, plus access to additional features in the future.</p>
+      <button id="startCheckoutBtn">Get premium</button>
       <div id="paymentInfo"></div>
     </section>
 
     <section id="usecases">
       <h2>Example use cases</h2>
       <p class="muted">
-        Practical examples showing how KV Store can be used in real systems.
+        Practical examples showing how {storie} can be used in real systems.
       </p>
 
       <div class="usecase-grid">
@@ -102,11 +98,11 @@
         <div class="usecase">
           <h3>Pipe command output to a website</h3>
           <p>
-            Capture live CLI output and expose it on a page with a single fetch.
+            Capture a command's output and expose it on your static site.
           </p>
-          <pre><code>uptime | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/site-status \
-      -H "Content-Type: text/plain" --data-binary @-</code></pre>
-          <pre><code class="language-js">const res = await fetch('/api/kv/&lt;user&gt;/site-status');
+          <pre><code>uptime | curl -X POST https://storie.xyz/api/kv/&lt;user&gt;/site-status -H "Content-Type: text/plain" --data-binary @-</code></pre>
+          In your site:
+          <pre><code class="language-js">const res = await fetch('storie.xyz/api/kv/&lt;user&gt;/site-status');
     document.getElementById('status').textContent = await res.text();</code></pre>
         </div>
 
@@ -125,13 +121,14 @@
         <div class="usecase">
           <h3>Coordinate scripts across machines</h3>
           <p>
-            Use KV Store as a lightweight mailbox for automation and orchestration.
+            Use {storie} as a lightweight mailbox for automation and orchestration.
           </p>
-          <pre><code># machine A publishes the next action
-    echo "restart-api" | curl -X POST https://your-kv-host/api/kv/&lt;user&gt;/ops-task --data-binary @-
+          <pre><code>
+# machine A publishes the next action
+echo "restart-api" | curl -X POST https://storie.xyz/api/kv/&lt;user&gt;/ops-task --data-binary @-
 
-    # machine B polls and executes
-    curl https://your-kv-host/api/kv/&lt;user&gt;/ops-task | xargs -I{} bash -lc '{}'</code></pre>
+# machine B polls and executes
+curl https://your-kv-host/api/kv/&lt;user&gt;/ops-task | xargs -I{} bash -lc '{}'</code></pre>
         </div>
 
         <div class="usecase">
@@ -148,7 +145,7 @@
     <section id="infoSection">
       <h2>Info</h2>
       <p>
-        GitHub: <a href="https://github.com/vagos/storie" target="_blank" rel="noreferrer">https://github.com/vagos/storie</a><br />
+        Source: <a href="https://github.com/vagos/storie" target="_blank" rel="noreferrer">https://github.com/vagos/storie</a><br />
         Support: <a href="mailto:vagos@lamprou.xyz">vagos@lamprou.xyz</a>
       </p>
       <p>

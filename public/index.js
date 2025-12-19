@@ -75,7 +75,7 @@ const setAuthHeroState = (user) => {
   if (user) {
     if (authOut) authOut.style.display = 'none';
     if (authIn) authIn.style.display = 'block';
-    if (heroPill) heroPill.textContent = `${user.id} (${user.tier})`;
+    if (heroPill) heroPill.textContent = `${user.id}`;
 
     if (heroLogoutBtn) {
     heroLogoutBtn.onclick = () => {
@@ -100,9 +100,6 @@ const setCurrentUser = (user) => {
   currentUser = user;
 
   setAuthHeroState(user);
-
-  // loginStatus exists on pages
-  if (loginStatus) loginStatus.textContent = user ? `Logged in as ${user.id}` : 'Not logged in.';
 
   if (user) {
     document.body.classList.add('logged-in');
@@ -150,11 +147,12 @@ const renderEntries = (entries) => {
       }
 
       return `<tr>
-        <td>${e.key}</td>
+        <td>${e.key}
+          <button class="simple shareBtn" data-key="${e.key}" data-requires-secret="${requiresSecret}">[share]</button>
+        </td>
         <td>${safeValue}</td>
         <td>
           ${updated}
-          <button class="secondary shareBtn" data-key="${e.key}" data-requires-secret="${requiresSecret}">Share link</button>
         </td>
       </tr>`;
     })
@@ -164,7 +162,7 @@ const renderEntries = (entries) => {
 const updatePagination = () => {
   if (!pageInfo || !prevPageBtn || !nextPageBtn) return;
   const totalPages = Math.ceil(totalEntries / pageSize) || 1;
-  pageInfo.textContent = `Page ${currentPage + 1} of ${totalPages} (${totalEntries} items)`;
+  pageInfo.textContent = `${currentPage + 1}/${totalPages} (${totalEntries} total)`;
   prevPageBtn.disabled = currentPage === 0;
   nextPageBtn.disabled = (currentPage + 1) * pageSize >= totalEntries;
 };

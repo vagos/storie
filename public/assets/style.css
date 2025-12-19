@@ -121,6 +121,14 @@ button.secondary{
   border-color:#b8b8b8;
 }
 
+button.simple {
+  border:none;
+  background:none;
+  color:var(--link);
+  padding:0;
+  box-shadow:none;
+}
+
 #dashboard > div:first-child{
   display:flex;
   justify-content:space-between;
@@ -137,6 +145,10 @@ button.secondary{
 #paymentInfo,
 #pageInfo{
   color:var(--muted);
+}
+
+#loginForm {
+  max-width:320px;
 }
 
 #pageInfo{font-weight:600}
@@ -314,4 +326,8 @@ th{
 
 #authBoxLoggedIn .auth-title{
   text-align:right;
+}
+
+h1.title {
+  color: blue;
 }

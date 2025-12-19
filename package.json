@@ -1,7 +1,7 @@
 {
   "name": "kvstore",
   "version": "1.0.0",
-  "description": "Simple Node.js KV store with SQLite persistence and in-memory cache",
+  "description": "Simple key-value store.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",

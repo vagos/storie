@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>KV Store – Login</title>
+  <title>storie:login</title>
   <link rel="stylesheet" href="/assets/style.css">
 </head>
 
@@ -11,8 +11,7 @@
   <div class="card">
     <header class="hero">
       <div class="hero-left">
-        <h1>KV Store</h1>
-        <p id="loginStatus">Log in to manage your data.</p>
+        <h1 class="title">storie</h1>
       </div>
       <div class="hero-right"></div>
     </header>
@@ -21,8 +20,8 @@
       <h2>Log in</h2>
 
       <form id="loginForm" onsubmit="return false;">
-        <label for="userId">User ID</label>
-        <input id="userId" type="text" placeholder="alice123" autocomplete="username">
+        <label for="userId">Username</label>
+        <input id="userId" type="text" placeholder="username" autocomplete="username">
 
         <label for="password">Password</label>
         <input id="password" type="password" placeholder="••••" autocomplete="current-password">
@@ -31,10 +30,6 @@
           <button id="createUserBtn" type="button">Log in / Create account</button>
           <a href="/">Back</a>
         </div>
-
-        <p class="muted" style="margin-top:10px;">
-          All accounts start as <strong>free</strong>. Upgrade to premium after logging in.
-        </p>
       </form>
     </section>
   </div>
